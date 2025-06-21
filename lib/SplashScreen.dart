@@ -1,9 +1,10 @@
+// ignore_for_file: prefer_const_constructors
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:technician_assistant_app/Auth/Registeration.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
-
   @override
   State<Splashscreen> createState() => _SplashscreenState();
 }
@@ -12,7 +13,14 @@ class _SplashscreenState extends State<Splashscreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 5), () {});
+    Timer(const Duration(seconds: 5), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                RegistrationScreen()), // Replace with your next screen
+      );
+    });
   }
 
   @override

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "27902403594",
+    "project_id": "technication-assistant-app",
+    "storage_bucket": "technication-assistant-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27902403594:android:f21858b44411766109ebf3",
+        "android_client_info": {
+          "package_name": "com.example.technician_assistant_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD21eL4DZY7WKsOjde7D5Nc38XDSureuLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

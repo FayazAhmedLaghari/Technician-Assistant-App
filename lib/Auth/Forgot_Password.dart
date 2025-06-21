@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:technician_assistant_app/Widgets/Button.dart';
+
+import '../Widgets/Button.dart';
 import 'Login.dart';
 
 class Frogot_Password extends StatefulWidget {
@@ -9,6 +11,48 @@ class Frogot_Password extends StatefulWidget {
 
 class _VerificationScreenState extends State<Frogot_Password> {
   final TextEditingController _emailController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  void _resetPassword() async {
+    String email = _emailController.text.trim();
+    // Validate if email is empty
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter your registered email")),
+      );
+      return;
+    }
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password reset email sent! Check your inbox."),
+          backgroundColor: Colors.green,
+        ),
+      );
+      // Navigate to Verification Code screen if needed
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => loginOnly()),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("No account found with this email."),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error: ${e.message}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +85,10 @@ class _VerificationScreenState extends State<Frogot_Password> {
             child: SingleChildScrollView(
               padding: EdgeInsets.zero,
               child: Column(
+
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  
                   // Image
                   ClipRRect(
                     child: Align(
@@ -118,21 +164,12 @@ class _VerificationScreenState extends State<Frogot_Password> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: CustomBlueButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const LoginOnlyScreen()),
-                            );
-                          },
-                          text: 'Send Resest Email',
-                        )),
+
+                  CustomBlueButton(
+                    text: ' Forgot Password ',
+                    onPressed: () {
+                      _resetPassword();
+                    },
                   ),
                   const SizedBox(height: 16),
                 ],
