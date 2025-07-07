@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:technician_assistant_app/User%20Screens/autosearch_screen.dart';
 import 'package:technician_assistant_app/User%20Screens/service_list.dart';
 
 class Dashboard extends StatefulWidget {
@@ -29,15 +31,16 @@ class _DashboardState extends State<Dashboard> {
   ];
 
   final List<String> imagePaths = [
-    "assets/images/image5.jpeg",
-    "assets/images/image.jpeg",
-    "assets/images/image6.jpeg",
-    "assets/images/image4.jpeg",
-    "assets/images/image3.jpeg",
+    "assets/image5.jpeg",
+    "assets/image.jpeg",
+    "assets/ac repair.jpg",
+    "assets/Plumbing.jpg",
+    "assets/image6.jpeg",
   ];
-  bool isAutoSearchEnabled = false;
-bool isManualSearchEnabled = false;
 
+  bool isAutoSearchOn = false;
+  bool isManualSearchOn = false;
+  bool isAuto = true;
 
   @override
   void initState() {
@@ -95,59 +98,72 @@ bool isManualSearchEnabled = false;
           ),
         ),
       ),
-     drawer: Drawer(
-  child: ListView(
-    padding: EdgeInsets.zero,
-    children: [
-      const UserAccountsDrawerHeader(
-        accountName: Text('User'),
-        accountEmail: Text('user456@gmail.com'),
-        currentAccountPicture: CircleAvatar(
-          backgroundColor: Colors.white,
-          child: Icon(Icons.person, color: Colors.black),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const UserAccountsDrawerHeader(
+              accountName: Text('User'),
+              accountEmail: Text('user456@gmail.com'),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, color: Colors.black),
+              ),
+              decoration: BoxDecoration(color: Colors.deepPurple),
+            ),
+            ListTile(
+              leading: const Icon(Icons.manage_search),
+              title: const Text('Auto Search'),
+              trailing: Switch(
+                value: isAutoSearchOn,
+                onChanged: (bool value) {
+                  setState(() {
+                    isAutoSearchOn = value;
+                    if (value) {
+                      isManualSearchOn = false;
+                    }
+                  });
+                  if (value) {
+                    Navigator.pop(context);
+                    Future.delayed(const Duration(milliseconds: 300), () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const AutoSearch()),
+                      );
+                    });
+                  }
+                },
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.search),
+              title: const Text('Manual Search'),
+              trailing: Switch(
+                value: isManualSearchOn,
+                onChanged: (bool value) {
+                  setState(() {
+                    isManualSearchOn = value;
+                    if (value) {
+                      isAutoSearchOn = false;
+                    }
+                  });
+                  if (value) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Manual Search selected'),
+                    ));
+                  }
+                },
+              ),
+            ),
+            const Divider(),
+            ListTile(leading: Icon(Icons.home), title: Text('Home'), onTap: () {}),
+            ListTile(leading: Icon(Icons.room_service), title: Text('Services'), onTap: () {}),
+            ListTile(leading: Icon(Icons.location_city), title: Text('Location'), onTap: () {}),
+            ListTile(leading: Icon(Icons.logout), title: Text('Log Out'), onTap: () {}),
+          ],
         ),
-        decoration: BoxDecoration(color: Colors.deepPurple),
       ),
-      const ListTile(
-        leading: Icon(Icons.home),
-        title: Text('Home'),
-      ),
-      const ListTile(
-        leading: Icon(Icons.room_service),
-        title: Text('Services'),
-      ),
-      const ListTile(
-        leading: Icon(Icons.location_city),
-        title: Text('Location'),
-      ),
-      SwitchListTile(
-        title: const Text('Auto Search'),
-        secondary: const Icon(Icons.autorenew),
-        value: isAutoSearchEnabled,
-        onChanged: (value) {
-          setState(() {
-            isAutoSearchEnabled = value;
-          });
-        },
-      ),
-      SwitchListTile(
-        title: const Text('Manual Search'),
-        secondary: const Icon(Icons.search),
-        value: isManualSearchEnabled,
-        onChanged: (value) {
-          setState(() {
-            isManualSearchEnabled = value;
-          });
-        },
-      ),
-      const ListTile(
-        leading: Icon(Icons.logout),
-        title: Text('LogOut'),
-      ),
-    ],
-  ),
-),
-
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,15 +179,88 @@ bool isManualSearchEnabled = false;
               ),
             ),
             const SizedBox(height: 12),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(Icons.location_on, color: Colors.blue, size: 20),
-                  SizedBox(width: 5),
-                  Text("Pakistan", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  SizedBox(width: 5),
-                  Icon(Icons.keyboard_arrow_down_outlined)
+                  Row(
+                    children: const [
+                      Icon(Icons.location_on, color: Colors.blue, size: 20),
+                      SizedBox(width: 5),
+                      Text("Pakistan", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                      SizedBox(width: 5),
+                      Icon(Icons.keyboard_arrow_down_outlined)
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.deepPurple),
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            if (!isAuto) {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => const AutoSearch()),
+                              );
+                              if (result == 'back_to_manual') {
+                                setState(() {
+                                  isAuto = false;
+                                });
+                              }
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: isAuto ? Colors.deepPurple : Colors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              'Auto',
+                              style: TextStyle(
+                                color: isAuto ? Colors.white : Colors.deepPurple,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        GestureDetector(
+                          onTap: () {
+                            if (isAuto) {
+                              setState(() {
+                                isAuto = false;
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Manual Search selected")),
+                              );
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: !isAuto ? Colors.deepPurple : Colors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              'Manual',
+                              style: TextStyle(
+                                color: !isAuto ? Colors.white : Colors.deepPurple,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
@@ -216,7 +305,6 @@ bool isManualSearchEnabled = false;
                 },
               ),
             ),
-            const SizedBox(height: 16),
           ],
         ),
       ),
@@ -229,10 +317,7 @@ bool isManualSearchEnabled = false;
       width: double.infinity,
       height: 180,
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(path),
-          fit: BoxFit.cover,
-        ),
+        image: DecorationImage(image: AssetImage(path), fit: BoxFit.cover),
       ),
     );
   }
@@ -248,13 +333,7 @@ bool isManualSearchEnabled = false;
             decoration: BoxDecoration(
               color: iconColor.withOpacity(0.2),
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: iconColor.withOpacity(0.4),
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+              boxShadow: [BoxShadow(color: iconColor.withOpacity(0.4), blurRadius: 6, offset: const Offset(0, 3))],
             ),
             child: Icon(icon, size: 30, color: iconColor),
           ),

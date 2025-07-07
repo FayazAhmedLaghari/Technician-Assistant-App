@@ -51,7 +51,7 @@ class ChatScreen extends StatelessWidget {
                     backgroundColor: const Color.fromARGB(255, 111, 84, 154),
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                   ),
-                  child: const Icon(Icons.send, size: 18),
+                  child: const Icon(Icons.send, size: 18,color: Colors.white,),
                 ),
               ],
             ),

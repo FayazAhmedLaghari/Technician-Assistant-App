@@ -1,4 +1,3 @@
-
 class ServiceProvider {
   final String name;
   final String status;

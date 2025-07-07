@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:technician_assistant_app/User%20Screens/Dashboard.dart';
 import 'package:technician_assistant_app/firebase_options.dart';
 import 'SplashScreen.dart';
 
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Splashscreen(),
+      home: Dashboard(),
     );
   }
 }
